@@ -1,0 +1,166 @@
+package com.android.androidhri;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.UUID;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.view.Menu;
+import android.widget.TextView;
+import android.content.Context;
+
+public class BluetoothAdapt {
+	  private static final int REQUEST_ENABLE_BT = 1;
+	  private BluetoothAdapter btAdapter = null;
+	  private BluetoothSocket btSocket = null;
+	  private OutputStream outStream = null;
+
+	  // Well known SPP UUID
+	  private static final UUID MY_UUID =
+	      UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+	  // Insert your server's MAC address
+	  private static String address = "00:11:E0:03:73:1A";
+	  private Context mContext;
+	
+	public BluetoothAdapt(Context mContext){
+		this.mContext = mContext;
+		btAdapter = BluetoothAdapter.getDefaultAdapter();
+	    CheckBTState();
+	    startConnect();
+	}
+	
+	public void startConnect(){
+		// Set up a pointer to the remote node using it's address.
+	    BluetoothDevice device = btAdapter.getRemoteDevice(address);
+
+	    // Two things are needed to make a connection:
+	    //   A MAC address, which we got above.
+	    //   A Service ID or UUID.  In this case we are using the
+	    //     UUID for SPP.
+	    try {
+	      btSocket = device.createRfcommSocketToServiceRecord(MY_UUID);
+	    } catch (IOException e) {
+	    	System.out.println("Fatal Error:  In onResume() and socket create failed: " + e.getMessage() + ".");
+	    }
+
+	    // Discovery is resource intensive.  Make sure it isn't going on
+	    // when you attempt to connect and pass your message.
+	    btAdapter.cancelDiscovery();
+
+	    // Establish the connection.  This will block until it connects.
+	    try {
+	      btSocket.connect();
+	      System.out.println("\n...Connection established and data link opened...");
+	    } catch (IOException e) {
+	      try {
+	        btSocket.close();
+	      } catch (IOException e2) {
+	        System.out.println("Fatal Error: In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".");
+	      }
+	    }
+		
+	}
+	
+	public void sendData(String bestMatch){
+		try {
+		      outStream = btSocket.getOutputStream();
+		    } catch (IOException e) {
+		      System.out.println("Fatal Error: In onResume() and output stream creation failed:" + e.getMessage() + ".");
+		    }
+
+		    byte[] msgBuffer = bestMatch.getBytes();
+		    try {
+		      outStream.write(msgBuffer);
+		    } catch (IOException e) {
+		      String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
+		      if (address.equals("00:00:00:00:00:00")) 
+		        msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 37 in the java code";
+		      msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
+
+		      System.out.println("Fatal Error" + msg);       
+		    }
+		
+		    
+		    if (outStream != null) {
+			      try {
+			        outStream.flush();
+			      } catch (IOException e) {
+			    	  System.out.println("Fatal Error:  In onPause() and failed to flush output stream: " + e.getMessage() + ".");
+			      }
+			    }
+	
+	}
+	
+	public void sendBytes(byte[] msgBuffer){
+		try {
+		      outStream = btSocket.getOutputStream();
+		    } catch (IOException e) {
+		      System.out.println("Fatal Error: In onResume() and output stream creation failed:" + e.getMessage() + ".");
+		    }
+
+		    
+		    try {
+		      outStream.write(msgBuffer);
+		    } catch (IOException e) {
+		      String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
+		      if (address.equals("00:00:00:00:00:00")) 
+		        msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 37 in the java code";
+		      msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
+
+		      System.out.println("Fatal Error" + msg);       
+		    }
+		
+		    
+		    if (outStream != null) {
+			      try {
+			        outStream.flush();
+			      } catch (IOException e) {
+			    	  System.out.println("Fatal Error:  In onPause() and failed to flush output stream: " + e.getMessage() + ".");
+			      }
+			    }
+	
+	}
+	
+	
+	public void closeConnect(){
+		try     {
+		      btSocket.close();
+		    } catch (IOException e2) {
+		      System.out.println("Fatal Error: In onPause() and failed to close socket." + e2.getMessage() + ".");
+		    }
+	}
+	
+	
+	
+	private void CheckBTState() {
+	    // Check for Bluetooth support and then check to make sure it is turned on
+
+	    // Emulator doesn't support Bluetooth and will return null
+	    if(btAdapter==null) { 
+	      System.out.println("Fatal Error: Bluetooth Not supported. Aborting.");
+	    } else {
+	      if (btAdapter.isEnabled()) {
+	        System.out.println("\n...Bluetooth is enabled...");
+	      } else {
+	        //Prompt user to turn on Bluetooth
+	        //Intent enableBtIntent = new Intent(btAdapter.ACTION_REQUEST_ENABLE);
+	        //startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+	      }
+	    }
+	  }
+
+	 
+
+}

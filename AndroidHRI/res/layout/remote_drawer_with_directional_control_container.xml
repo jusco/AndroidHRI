@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+
+  <LinearLayout android:orientation="vertical"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:gravity="center_horizontal">
+
+    <!--
+      The Views in here are used as a hack to force the slider to the middle of
+      the screen. If you know how to do the same thing in a cleaner way, please
+      submit a patch to fix it.
+    -->
+    <View android:layout_width="wrap_content" android:layout_height="10dip"
+      android:layout_weight="36" android:background="#00FF0000" />
+
+    
+
+    <View android:layout_width="wrap_content" android:layout_height="10dip"
+      android:layout_weight="39" android:background="#000000FF" />
+  </LinearLayout>
+
+
+  <LinearLayout android:orientation="vertical"
+    android:layout_width="fill_parent" android:layout_height="fill_parent">
+    <!-- Add some padding here to account for the status bar at the top of the screen.  -->
+    <View android:layout_width="wrap_content" android:layout_height="1dip"
+      android:layout_weight="5" android:background="#000000FF" />
+    <LinearLayout android:orientation="vertical"
+      android:layout_width="fill_parent" android:layout_height="1dip"
+       android:visibility="visible"
+      android:gravity="bottom"
+      android:layout_weight="95"
+      >
+      <LinearLayout android:id="@+id/directionalController_container"
+        android:orientation="vertical" android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:visibility="visible"
+        android:gravity="bottom">
+        <!--
+          This is a hacky way to force the directional controller to the bottom.
+          If you know how to do it right, please submit a patch to fix it.
+        -->
+        <TextView android:layout_width="wrap_content"
+          android:layout_height="wrap_content" android:layout_weight="1"
+          android:text="\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" />
+      </LinearLayout>
+    </LinearLayout>
+  </LinearLayout>
+
+
+  <LinearLayout android:orientation="vertical"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:visibility="visible">
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="85" >
+
+          <Button
+              android:id="@+id/button1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentTop="true"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="64dp"
+              android:onClick="onSelect"
+              android:text="Select" />
+
+          <Button
+              android:id="@+id/button5"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/button1"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="52dp"
+              android:onClick="onReset"
+              android:text="Reset" />
+
+
+      </RelativeLayout>
+
+    <View android:layout_width="wrap_content" android:layout_height="1dip" android:layout_weight="85" android:background="#000000FF"/>
+
+    
+
+    <View android:layout_width="wrap_content" android:layout_height="1dip" android:layout_weight="15" android:background="#00FF00FF"/>
+  </LinearLayout>
+
+</FrameLayout>
+
