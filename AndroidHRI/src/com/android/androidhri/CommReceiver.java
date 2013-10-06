@@ -1,10 +1,12 @@
 package com.android.androidhri;
 
+import de.dfki.android.gestureTrainer.GestureTrainerLow;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -31,6 +33,18 @@ public class CommReceiver extends Activity {
         getMenuInflater().inflate(R.menu.comm_receiver, menu);
         return true;
     }
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		if(item.getItemId()==R.id.action_low){
+			Intent newIntent = new Intent(this,GestureTrainerLow.class);
+			this.startActivity(newIntent);
+			finish();
+			return true;
+		}
+		return false;
+	}
+	
     
     public void onSelectedRobot(View v){
     	v.setBackgroundColor(Color.BLUE);

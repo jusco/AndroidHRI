@@ -5,5 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_comm_modality">CommModality</string>
+    <string name="low_setting">Directional Gestures</string>
 
 </resources>
